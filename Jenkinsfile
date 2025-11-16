@@ -5,6 +5,10 @@ pipeline {
         string(name: "App_Version", description: "provide application version")
     }
 
+    environment {
+    DOCKERHUB_CREDENTIALS=credentials("dockerhub")
+    }
+
     stages {
 
         stage("Repo Clone") {
