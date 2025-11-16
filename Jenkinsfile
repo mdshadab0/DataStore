@@ -80,6 +80,19 @@ pipeline {
                 """
             }
         }
+        stage("Loggingin & Pushing Docker image") {
+            steps {
+                sh """
+                    echo "-------- Logging To DockerHub --------"
+                    docker login -u $DOCKERHUB_CREDENTIALS_USR --password $DOCKERHUB_CREDENTIALS_PSW
+                    echo "-------- DockerHub Login Successful --------"
+
+                    echo "-------- Pushing Docker Image To DockerHub --------"
+                    docker push mdshadab0500/datastore:"${App_Version}"
+                    echo "-------- Docker Image Pushed Successfully --------"
+                    """
+            }
+        }
     }
 }
 
