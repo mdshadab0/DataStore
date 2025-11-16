@@ -1,7 +1,7 @@
 pipeline {
   agent any
 
-    stages {
+     stages {
     stage("Repo Clone") {
       steps {
         checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/shivagande26/DataStore.git']])
@@ -29,10 +29,38 @@ pipeline {
       steps {
         sh """
           echo "-------- Pushing Artifacts To S3 --------"
-          aws s3 cp ./target/*.jar s3://datastore-artefact-store/
+          aws s3 cp ./target/*.jar s3://datastore-artefact-store-apps/
           echo "-------- Pushing Artifacts To S3 Completed --------"
+        """
+      }
+    }
+    stage("Docker Image Build") {
+      steps {
+        sh """
+          echo "-------- Building Docker Image --------"
+          docker build -t datastore:"${App_Version}" .
+          echo "-------- Image Successfully Built --------"
+        """
+      }
+    }
+    stage("Docker Image Scan") {
+      steps {
+        sh """
+          echo "-------- Scanning Docker Image --------"
+          trivy image datastore:"${App_Version}"
+          echo "-------- Scanning Docker Image Complete --------"
+        """
+      }
+    }
+    stage("Docker Image Tag") {
+      steps{
+        sh """
+          echo "-------- Tagging Docker Image --------"
+          docker tag datastore:"${App_Version}" 8072388539/datastore:"${App_Version}"
+          echo "-------- Tagging Docker Image Completed."
         """
       }
     }
   }
 }
+       
