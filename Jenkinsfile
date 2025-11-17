@@ -130,31 +130,31 @@ pipeline {
 
     post {
         success {
-            slackSend channel: '#alerting',
+            slackSend channel: '#alert',
                       color: 'good',
                       message: "✔️ SUCCESS: `${env.JOB_NAME} #${env.BUILD_NUMBER}` completed successfully."
         }
 
         failure {
-            slackSend channel: '#alerting',
+            slackSend channel: '#alert',
                       color: 'danger',
                       message: "❌ FAILURE: `${env.JOB_NAME} #${env.BUILD_NUMBER}` failed.\nCheck console output: ${env.BUILD_URL}"
         }
 
         unstable {
-            slackSend channel: '#alerting',
+            slackSend channel: '#alert',
                       color: 'warning',
                       message: "⚠️ UNSTABLE: `${env.JOB_NAME} #${env.BUILD_NUMBER}` returned unstable status."
         }
 
         aborted {
-            slackSend channel: '#alerting',
+            slackSend channel: '#alert',
                       color: '#808080',
                       message: "⛔ ABORTED: `${env.JOB_NAME} #${env.BUILD_NUMBER}` was aborted."
         }
 
         always {
-            slackSend channel: '#alerting',
+            slackSend channel: '#alert',
                       color: '#439FE0',
                       message: "ℹ️ Build finished: `${env.JOB_NAME} #${env.BUILD_NUMBER}`"
         }
